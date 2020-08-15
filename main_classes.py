@@ -122,6 +122,9 @@ class Game(Deck):
 
 print('test_commint')
 
+
+print('test_commint')
+
 #
 a = Game(9)
 #
