@@ -2,45 +2,6 @@ from main_classes import *
 import collections
 
 
-def poker(hands):
-    return max(hands, key=hand_rank)
-
-
-def card_ranks(hand):
-    """
-
-    :param cards: list of cards
-    :return: ranks in descending order
-    """
-
-    ranks = ['--23456789TJQKA'.index(r) for r, s in hand]
-    ranks.sort(reverse=True)
-    return ranks
-
-
-def straight(ranks):
-    """
-    Returns True if the ordered ranks form a 5- card straight
-
-    :param ranks:
-    :return True/False:
-    """
-    return (max(ranks) - min(ranks) == 4) and (len(set(ranks)) == 5)
-
-
-def flush(hand):
-    """
-    Returns True if 5 cards have the same suit
-    :param hand:
-    :return:
-    """
-    suits = [s for r, s in hand]
-    freq = collections.Counter(suits)
-    if 5 in list(freq.values()):
-        return True
-    else:
-        return False
-
 
 def kind(n, ranks):
     """
@@ -54,6 +15,35 @@ def kind(n, ranks):
             return r
         else:
             return None
+
+
+def two_pair(ranks):
+    """
+    For 2 pairs, returns the the 2 ranks as a tuple. Since there can be 7 cards on the
+    :param ranks
+    :return: tuple (high pairs, low pair)
+    """
+    # ranks = ranks[:4]
+    pair = kind(2, ranks)
+    lowpair = kind(2, list(reversed(ranks)))
+    if pair and lowpair != pair:
+        return (pair, lowpair)
+    else:
+        return None
+
+
+def group(items):
+    """
+    return a list of [(count, x)...] highest count first then highest x first
+
+    :param items:
+    :return:
+    """
+    groups = [(items.count(x), x) for x in set(items)]
+    return sorted(groups, reverse=True)
+
+
+def unzip(pairs): return zip(*pairs)
 
 
 def hand_rank(hand):
@@ -73,35 +63,17 @@ def hand_rank(hand):
     :param hand as a list
     :return: rank of hand
     """
-    ranks = card_ranks(hand)
+    groups = group(['--23456789TJQKA'.index(r) for r, s in hand])
+    counts, ranks = unzip(groups)
+    if ranks == (14, 5, 4, 3, 2):
+        ranks = (5, 4, 3, 2, 1)
+    straight = (len(ranks) == 5) and (max(ranks) - min(ranks) == 4)
+    flush = len(set([r for r, s in hand])) == 1
+    return max(count_rankings[counts], 4 * straight + 5 * flush), ranks
 
-    # straignt flush
-    if straight(ranks) and flush(hand):
-        return (8, max(ranks))
-    # four of a kind
-    elif kind(4, ranks):
-        return (7, kind(4, ranks))
-    # full house
-    elif kind(3, ranks) and kind(2, ranks):
-        return (6, kind(3, ranks), kind(2, ranks))
-    # flush
-    elif flush(hand):
-        return (5, ranks)
-    # straight
-    elif straight(ranks):
-        return (4, max(ranks))
-    # three of a kind
-    elif kind(3, ranks):
-        return (3, kind(3, ranks))
-    # 2 pairs
-    elif two_pair(ranks):
-        return (2, two_pair(ranks))
-    # 1 pairs
-    elif kind(2, ranks):
-        return (1, kind(2, ranks))
-    # kicker
-    else:
-        return (0, ranks)
+
+count_rankings = {(5,): 10, (4, 1): 7, (3, 2): 6, (3, 1, 1): 3, (2, 2, 1): 2,
+                  (2, 1, 1, 1): 1, (1, 1, 1, 1, 1): 0}
 
 # class Evaluator:
 #
@@ -125,3 +97,4 @@ def hand_rank(hand):
 #     #     """
 #     #
 #     # return
+

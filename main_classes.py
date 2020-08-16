@@ -120,10 +120,6 @@ class Game(Deck):
         return games_results_round
 
 
-print('test_commint')
-
-
-print('test_commint')
 
 #
 a = Game(9)
