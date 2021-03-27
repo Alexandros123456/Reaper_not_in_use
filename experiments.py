@@ -1,5 +1,4 @@
-import random
-from main_classes import *
+from Base_classes.main_classes import *
 
 # #lets run a simulation!!!
 #

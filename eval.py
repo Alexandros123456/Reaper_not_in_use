@@ -1,8 +1,3 @@
-from main_classes import *
-import collections
-
-
-
 def kind(n, ranks):
     """
     Returns the first rank that this hand has exactly n of or None
