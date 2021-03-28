@@ -1,5 +1,5 @@
-import pandas as pd
-import numpy as np
+# import pandas as pd
+# import numpy as np
 import itertools
 import random
 
@@ -26,14 +26,20 @@ class Deck(Card):
         return self.drawn_cards, self.deck
 
 
-class Game(Deck):
+class Player():
 
     def __init__(self, number_of_players=9):
+        self.player_names = ['Villain_' + str(i) for i in range(1, number_of_players)]
+        self.player_names.insert(0, 'Hero')
+
+
+class Game(Deck):
+
+    def __init__(self):
         super().__init__()
 
-        self.number_of_players = number_of_players
         self.game_rounds = ['preflop', 'flop', 'turn', 'river']
-        self.player_names = ['Player_' + str(i) for i in range(1, self.number_of_players + 1)]
+
 #
 #     def deal_cards(self):
 #         return self.draw_card(self.number_of_players * 2 + 5)
