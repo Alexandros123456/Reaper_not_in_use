@@ -1,4 +1,4 @@
-from Base_classes.main_classes import *
+from base_classes.main_classes import *
 
 # #lets run a simulation!!!
 #

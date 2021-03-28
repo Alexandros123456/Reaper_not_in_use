@@ -1,6 +1,5 @@
-import Base_classes.main_classes as BS
+import base_classes.main_classes as base_clases
 import utilities.system as st
+import random
 
-test = BS.Deck()
-print()
-st.clear()
+deck_test = base_clases.Deck()
