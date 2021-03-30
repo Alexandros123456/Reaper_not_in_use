@@ -26,95 +26,29 @@ class Deck(Card):
         return self.drawn_cards, self.deck
 
 
-class Player():
+class Players():
 
     def __init__(self, number_of_players=9):
         self.player_names = ['Villain_' + str(i) for i in range(1, number_of_players)]
         self.player_names.insert(0, 'Hero')
 
 
-class Game(Deck):
+class Rounds():
 
     def __init__(self):
-        super().__init__()
+        self.game_rounds = ['Pref-lop', 'Flop', 'Turn', 'River']
+        self.draw_player_cards_at_round = [2, 0, 0, 0]
+        self.draw_board_cards_at_round = [0, 3, 1, 1]
 
-        self.game_rounds = ['preflop', 'flop', 'turn', 'river']
 
-#
-#     def deal_cards(self):
-#         return self.draw_card(self.number_of_players * 2 + 5)
-#
-#     def deal_cards_game(self):
-#
-#         game_deck = self.full_deck[:]
-#         players_draw = []
-#
-#         preflop_results = pd.DataFrame()
-#         sep = '-'
-#
-#         for rnd in self.game_rounds:
-#
-#             if rnd == 'preflop':
-#
-#                 for plr in player_names:
-#                     temp_card_1 = random.choice(game_deck)
-#                     game_deck.remove(temp_card_1)
-#
-#                     temp_card_2 = random.choice(game_deck)
-#                     game_deck.remove(temp_card_2)
-#
-#                     temp_pair = temp_card_1 + '-' + temp_card_2
-#                     preflop_results[plr] = [temp_pair]
-#
-#                     players_draw.append(temp_pair)
-#
-#                 preflop_draw = pd.DataFrame(players_draw).T
-#
-#                 for i, plr in enumerate(player_names):
-#                     preflop_draw.rename(columns={preflop_draw.columns[i]: plr}, inplace=True)
-#
-#                 preflop_draw['Board'] = ''
-#                 preflop_draw['Round'] = rnd
-#
-#             if rnd == 'flop':
-#                 flop_draw_p = pd.DataFrame(players_draw).T
-#                 flop_draw = random.sample(game_deck, 3)
-#
-#                 for c in flop_draw:
-#                     game_deck.remove(c)
-#
-#                 for i, plr in enumerate(player_names):
-#                     flop_draw_p.rename(columns={flop_draw_p.columns[i]: plr}, inplace=True)
-#
-#                 flop_draw_p['Board'] = [sep.join(flop_draw)]
-#                 flop_draw_p['Round'] = rnd
-#
-#             if rnd == 'turn':
-#                 turn_draw_p = pd.DataFrame(players_draw).T
-#                 turn_draw = random.sample(game_deck, 1)
-#
-#                 for c in turn_draw:
-#                     game_deck.remove(c)
-#
-#                 for i, plr in enumerate(player_names):
-#                     turn_draw_p.rename(columns={turn_draw_p.columns[i]: plr}, inplace=True)
-#
-#                 turn_draw_p['Board'] = [sep.join(flop_draw + turn_draw)]
-#                 turn_draw_p['Round'] = rnd
-#
-#             if rnd == 'river':
-#                 river_draw_p = pd.DataFrame(players_draw).T
-#                 river_draw = random.sample(game_deck, 1)
-#
-#                 for c in river_draw:
-#                     game_deck.remove(c)
-#
-#                 for i, plr in enumerate(player_names):
-#                     river_draw_p.rename(columns={river_draw_p.columns[i]: plr}, inplace=True)
-#
-#                 river_draw_p['Board'] = [sep.join(flop_draw + turn_draw + river_draw)]
-#                 river_draw_p['Round'] = rnd
-#
-#         games_results_round = preflop_draw.append([flop_draw_p, turn_draw_p, river_draw_p])
-#         games_results_round.reset_index(inplace=True, drop=True)
-#         games_results_round = games_results_round.rename(columns={'Player_1': 'Hero'})
+class Game(Players, Deck, Rounds):
+
+    def __init__(self):
+        Players.__init__(self)
+        Deck.__init__(self)
+        Rounds.__init__(self)
+
+    def run_game(self):
+        for index, game_round in enumerate(self.game_rounds):
+            print('Game round is {}, {} board cards to be drawn, and each player will recieve {} cards!'
+                  .format(game_round, self.draw_board_cards_at_round[index], self.draw_player_cards_at_round[index]))
