@@ -1,5 +1,5 @@
 # import pandas as pd
-# import numpy as np
+import numpy as np
 import itertools
 import random
 
@@ -10,6 +10,12 @@ class Card:
         self.suite = ['D', 'H', 'S', 'C']
         self.value = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
         self.cards_list = [''.join(t) for t in list(itertools.product(*[self.suite, self.value]))]
+        self.symbol_mapping = {
+            'S': '♠',
+            'D': '♦',
+            'H': '♥',
+            'C': '♣',
+        }
 
 
 class Deck(Card):
@@ -26,29 +32,31 @@ class Deck(Card):
         return self.drawn_cards, self.deck
 
 
-class Players():
+class Players:
 
     def __init__(self, number_of_players=9):
         self.player_names = ['Villain_' + str(i) for i in range(1, number_of_players)]
         self.player_names.insert(0, 'Hero')
 
 
-class Rounds():
-
-    def __init__(self):
-        self.game_rounds = ['Pref-lop', 'Flop', 'Turn', 'River']
-        self.draw_player_cards_at_round = [2, 0, 0, 0]
-        self.draw_board_cards_at_round = [0, 3, 1, 1]
-
-
-class Game(Players, Deck, Rounds):
+class Game(Players, Deck):
 
     def __init__(self):
         Players.__init__(self)
         Deck.__init__(self)
-        Rounds.__init__(self)
+        self.board = []
+        self.game_rounds = ['Pref-lop', 'Flop', 'Turn', 'River']
+        self.draw_player_cards_at_round = [2, 0, 0, 0]
+        self.draw_board_cards_at_round = [0, 3, 1, 1]
 
     def run_game(self):
-        for index, game_round in enumerate(self.game_rounds):
-            print('Game round is {}, {} board cards to be drawn, and each player will recieve {} cards!'
-                  .format(game_round, self.draw_board_cards_at_round[index], self.draw_player_cards_at_round[index]))
+
+        for i, game_round in enumerate(self.game_rounds):
+
+            self.board.append(self.draw_card(self.draw_board_cards_at_round[i])[0])
+            print('\nIt is round {}: Cards on board: {}\n'.format(game_round, list(np.concatenate(self.board).flat)))
+
+            for j, player in enumerate(self.player_names):
+                if self.draw_player_cards_at_round[i] != 0:
+                    print('Player: {} draws cards:{}'.format(player,
+                                                             self.draw_card(self.draw_player_cards_at_round[i])[0]))
